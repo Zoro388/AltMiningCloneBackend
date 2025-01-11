@@ -83,19 +83,76 @@ const signInUser = async (req, res) => {
   });
 };
 
-const getUser = async (req, res) => {
-  const { userId } = req.user;
+// const getUser = async (req, res) => {
+//   const { userId } = req.user;
 
-  const user = await User.findOne({ _id: userId });
+//   const user = await User.findOne({ _id: userId });
 
-  res.json({
-    user: {
-      username: user.username,
-      email: user.email,
-    },
-  });
+//   res.json({
+//     user: {
+//       username: user.username,
+//       email: user.email,
+//     },
+//   });
+// };
+
+const getUserById = async (req, res) => {
+  const { id } = req.params; // Extract the user ID from the route parameters
+
+  try {
+    // Fetch the user from the database using the ID
+    const user = await User.findById(id);
+
+    // If the user is not found, return a 404 response
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // If user is found, return the user details
+    res.status(200).json({
+      message: "User fetched successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    // Handle errors (e.g., invalid ObjectId format, database issues)
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching the user" });
+  }
+};
+const getAllUsers = async (req, res) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find({}, { password: 0 }); // Exclude the password field for security
+
+    // Check if no users are found
+    if (users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    // Return the list of users
+    res.status(200).json({
+      message: "Users fetched successfully",
+      users,
+    });
+  } catch (error) {
+    // Handle errors (e.g., database issues)
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching users" });
+  }
 };
 
-module.exports = { registerUser, signInUser, getUser };
+module.exports = {
+  registerUser,
+  signInUser,
+  // getUser,
+  getUserById,
+  getAllUsers,
+};
 
 // bQJzROftoTu0ysgj

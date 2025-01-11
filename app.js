@@ -16,6 +16,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
+// Use the /api/auth prefix for all auth routes
 app.use("/api/auth", authRouter);
 // app.use("/api/task", taskRouter);
 app.use(errorHandler);
