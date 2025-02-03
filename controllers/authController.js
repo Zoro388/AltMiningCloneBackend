@@ -2,9 +2,14 @@
 // used to secure/hash passwords in our database
 // JWT- Json Web token.... used to authenticate user and generate a token
 
-const User = require("../models/user");
+const {User} = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Product = require("../models/product.js"); // New model for products
+const mongoose = require("mongoose");
+
+
+// USER REGISTRATION
 
 const registerUser = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -61,6 +66,8 @@ const registerUser = async (req, res, next) => {
     res.status(500).json({ message: "An error occurred while registering" });
   }
 };
+
+// USER SIGNIN
 const signInUser = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
@@ -83,76 +90,40 @@ const signInUser = async (req, res) => {
   });
 };
 
-// const getUser = async (req, res) => {
-//   const { userId } = req.user;
 
-//   const user = await User.findOne({ _id: userId });
 
-//   res.json({
-//     user: {
-//       username: user.username,
-//       email: user.email,
-//     },
-//   });
-// };
+// Create Product
+const createProduct = async (req, res) => {
+  const { category, description, image, name, price, quantity } = req.body;
 
-const getUserById = async (req, res) => {
-  const { id } = req.params; // Extract the user ID from the route parameters
+  if (!category || !description || !image || !name || !price || !quantity) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   try {
-    // Fetch the user from the database using the ID
-    const user = await User.findById(id);
+    const product = await Product.create({
+      category,
+      description,
+      image,
+      name,
+      price,
+      quantity,
+    });
 
-    // If the user is not found, return a 404 response
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // If user is found, return the user details
-    res.status(200).json({
-      message: "User fetched successfully",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
+    res.status(201).json({
+      message: "Product created successfully",
+      product,
     });
   } catch (error) {
-    // Handle errors (e.g., invalid ObjectId format, database issues)
     console.error(error);
     res
       .status(500)
-      .json({ message: "An error occurred while fetching the user" });
-  }
-};
-const getAllUsers = async (req, res) => {
-  try {
-    // Fetch all users from the database
-    const users = await User.find({}, { password: 0 }); // Exclude the password field for security
-
-    // Check if no users are found
-    if (users.length === 0) {
-      return res.status(404).json({ message: "No users found" });
-    }
-
-    // Return the list of users
-    res.status(200).json({
-      message: "Users fetched successfully",
-      users,
-    });
-  } catch (error) {
-    // Handle errors (e.g., database issues)
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while fetching users" });
+      .json({ message: "An error occurred while creating the product" });
   }
 };
 
 module.exports = {
   registerUser,
   signInUser,
-  // getUser,
-  getUserById,
-  getAllUsers,
+  createProduct,
 };
-
-// bQJzROftoTu0ysgj

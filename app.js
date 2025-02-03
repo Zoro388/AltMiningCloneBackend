@@ -7,69 +7,38 @@ require("dotenv").config();
 const app = express();
 const port = 4000;
 
-// const taskRouter = require("./routes/taskRouter");
+// Import Routers
 const authRouter = require("./routes/authRouter");
+const productRouter = require("./routes/productRouter"); // Import Product Router
+
+// Import Middlewares
 const notFound = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/error");
 
+// Middleware Setup
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
-// Use the /api/auth prefix for all auth routes
-app.use("/api/auth", authRouter);
-// app.use("/api/task", taskRouter);
+// Routes
+app.use("/api/auth", authRouter); // Auth Routes
+app.use("/api/products", productRouter ); // Product Routes
+
+// Error Handling
 app.use(errorHandler);
 app.use(notFound);
 
-// Dummy product data
-const products = [
-  {
-    id: 1,
-    name: "Wireless Mouse",
-    description: "A high-quality wireless mouse with ergonomic design.",
-    price: 25.99,
-    stock: 50,
-    category: "Electronics",
-  },
-  {
-    id: 2,
-    name: "Laptop Backpack",
-    description: "Water-resistant backpack with padded compartments.",
-    price: 45.99,
-    stock: 30,
-    category: "Accessories",
-  },
-  {
-    id: 3,
-    name: "Bluetooth Headphones",
-    description: "Noise-canceling headphones with long battery life.",
-    price: 89.99,
-    stock: 20,
-    category: "Electronics",
-  },
-];
-
-// Endpoint for fetching products
-app.get("/api/products", (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: products,
-  });
-});
-
+// Start Server
 const start = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log("DB Connected");
-    app.listen(4000, () => {
+    app.listen(port, () => {
       console.log(`Server is Listening on http://localhost:${port}`);
     });
   } catch (error) {
     console.log(`Could not connect due to ${error.message}`);
   }
 };
-
+  
 start();
-
-// CO FOC

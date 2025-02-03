@@ -17,6 +17,8 @@ const errorHandler = (error, req, res, next) => {
   if (error.errors?.password) {
     return res.status(400).json({ message: error.errors.password.message });
   }
+  console.log(error);
+  
   if (error?.code === 11000 && error?.keyValue.username) {
     return res.status(400).json({ message: "Username Already Exists" });
   }

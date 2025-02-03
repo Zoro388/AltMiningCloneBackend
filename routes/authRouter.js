@@ -2,27 +2,31 @@ const express = require("express");
 const {
   registerUser,
   signInUser,
-  // getUser,
   getUserById,
-  getAllUsers,
-} = require("../controllers/authController");
-const methodNotAllowed = require("../utilis/methodNotAllowed");
-const auth = require("../middlewares/auth");
+  createProduct,
+
+} = require("../controllers/authController"); // Import controller functions
+const methodNotAllowed = require("../utilis/methodNotAllowed"); // Handle unsupported HTTP methods
+const auth = require("../middlewares/auth"); // Authentication middleware
 
 const router = express.Router();
 
-// Register a new user
-router.route("/register").post(registerUser).all(methodNotAllowed);
+// Route to register a new user
+router
+  .route("/register")
+  .post(registerUser) // POST request for user registration
+  .all(methodNotAllowed); // Reject other HTTP methods
 
-// Sign in an existing user
-router.route("/signin").post(signInUser).all(methodNotAllowed);
+// Route to sign in an existing user
+router
+  .route("/signin")
+  .post(signInUser) // POST request for user sign-in
+  .all(methodNotAllowed); // Reject other HTTP methods 
 
-// Get the current authenticated user
-// router.route("/me").get(auth, getUser).all(methodNotAllowed);
+  // Route to create a product
+router
+.route("/create")
+.post(auth, createProduct) // Allows POST method for creating appointment
+.all(methodNotAllowed); // Reject other HTTP methods
 
-// Get all users
-router.route("/").get(auth, getAllUsers).all(methodNotAllowed);
-
-// Get a user by ID
-router.route("/:id").get(auth, getUserById).all(methodNotAllowed);
-module.exports = router;
+module.exports = router; // Export router to be used in app.js or server.js
