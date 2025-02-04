@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Relationship with User model
-    required: true,
+    required: false,
   },
 });
 

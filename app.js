@@ -10,6 +10,7 @@ const port = 4000;
 // Import Routers
 const authRouter = require("./routes/authRouter");
 const productRouter = require("./routes/productRouter"); // Import Product Router
+const orderRouter = require("./routes/orderRouter"); // Import Product Router
 
 // Import Middlewares
 const notFound = require("./middlewares/notFound");
@@ -23,6 +24,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRouter); // Auth Routes
 app.use("/api/products", productRouter ); // Product Routes
+app.use("/api/order", orderRouter ); // Product Routes
 
 // Error Handling
 app.use(errorHandler);
