@@ -2,12 +2,13 @@ const {Product} = require("../models/product.js");
 
 // FIND ALL PRODUCTS
 const allProducts = async (req, res) => {
-  const { userId } = req.user;
-  const products = await Product.find({ user: userId });
+  const products = await Product.find();
   res.json({
     data: products,
   });
 };
+
+
 
 // CRETAE A PRODUCT
 
@@ -17,7 +18,7 @@ const createProduct = async (req, res) => {
   if (!category || !description || !image || !name || !price || !quantity) {
     return res.status(400).json({ message: "All fields are required" });
   }
-const {userId} = req.user
+
 
   try {
     const product = await Product.create({
@@ -27,7 +28,7 @@ const {userId} = req.user
       name,
       price,
       quantity,
-      user: userId
+      // user: userId
     });
 
     res.status(201).json({
@@ -42,13 +43,14 @@ const {userId} = req.user
 
 
 const singleProduct = async (req, res) => {
-  const { userId } = req.user;
+  // const { userId } = req.user;
   const { id } = req.params;
 
   // console.log("Requested Product ID:", id);
   // console.log("User ID from Request:", userId);
 
-  const product = await Product.findOne({ _id: id, user: userId });
+  // const product = await Product.findOne({ _id: id, user: userId });
+  const product = await Product.findOne();
 
   // console.log("Product Found:", product); // Log the result
 
@@ -65,12 +67,13 @@ const singleProduct = async (req, res) => {
 // TO UPDATE A PRODUCT
 
 const updateProduct = async (req, res) => {
-  const { userId } = req.user;
+  // const { userId } = req.user;
   const { id } = req.params;
-  const product = await Product.findOneAndUpdate(
-    { _id: id, user: userId },
-    { ...req.body }
-  );
+  const product = await Product.findOneAndUpdate();
+  // const product = await Product.findOneAndUpdate(
+  //   { _id: id, user: userId },
+  //   { ...req.body }
+  // );
 
   if (!product) {
     return res.status(404).json({ message: `No Product with ID: ${id}` });
@@ -85,9 +88,10 @@ const updateProduct = async (req, res) => {
 // TO DELETE PRODUCT
 
 const deleteProduct = async (req, res) => {
-  const { userId } = req.user;
+  // const { userId } = req.user;
   const { id } = req.params;
-  const product = await Product.findOneAndDelete({ _id: id, user: userId });
+  const product = await Product.findOneAndDelete();
+  // const product = await Product.findOneAndDelete({ _id: id, user: userId });
 
   if (!product) {
     return res.status(404).json({ message: `No Product with ID: ${id}` });

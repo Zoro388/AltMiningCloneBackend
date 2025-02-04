@@ -8,14 +8,14 @@ const {
 
 } = require("../controllers/productController"); // Import controller functions
 const methodNotAllowed = require("../utilis/methodNotAllowed"); // Handle unsupported HTTP methods
-// const auth = require("../middlewares/auth"); // Authentication middleware
+const auth = require("../middlewares/auth"); // Authentication middleware
 
 const router = express.Router();
 
   // Route to create a product
 router
 .route("/").get(allProducts)
-.post(createProduct) // Allows POST method for creating product
+.post(auth, createProduct) // Allows POST method for creating product
 .all(methodNotAllowed); // Reject other HTTP methods
 
 
