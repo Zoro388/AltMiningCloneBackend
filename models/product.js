@@ -28,11 +28,6 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please provide a quantity"],
   },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Relationship with User model
-    required: false,
-  },
 });
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
