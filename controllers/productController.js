@@ -1,4 +1,8 @@
 const {Product} = require("../models/product.js");
+// const { image } = require("../utilis/cloudinaryConfig.js");
+// import cloudinary from '../utils/cloudinaryConfig.js';
+
+
 
 // FIND ALL PRODUCTS
 const allProducts = async (req, res) => {
@@ -11,6 +15,8 @@ const allProducts = async (req, res) => {
 
 
 // CRETAE A PRODUCT
+
+
 
 const createProduct = async (req, res) => {
   const { category, description, image, name, price, quantity } = req.body;

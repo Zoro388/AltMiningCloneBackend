@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 // // Define the Product schema inside the order
 const productSchemaO = new mongoose.Schema({
-  productName: {
+  name: {
     type: String,
     required: [true, "Please provide a Product Name"],
   },
-  productCategory: {
+  category: {
     type: String,
     required: [true, "Please provide a Product Category"],
   },
@@ -18,7 +18,7 @@ const productSchemaO = new mongoose.Schema({
     type: Number,
     required: [true, "Please provide a Quantity"],
   },
-  img: {
+  image: {
     type: String, // URL or file path
     required: false,
   },

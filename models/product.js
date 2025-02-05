@@ -32,4 +32,4 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
-module.exports = { User, Product };  // Export both models if necessary
+module.exports = { Product };  // Export both models if necessary
