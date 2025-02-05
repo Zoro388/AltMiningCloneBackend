@@ -1,6 +1,99 @@
-const {Product} = require("../models/product.js");
-// const { image } = require("../utilis/cloudinaryConfig.js");
-// import cloudinary from '../utils/cloudinaryConfig.js';
+// const {Product} = require("../models/product.js");
+
+const { Product } = require("../models/product.js");
+const cloudinary = require("../utilis/cloudinaryConfig.js"); // Import Cloudinary
+
+// CREATE A PRODUCT
+// const cloudinary = require("cloudinary").v2; // Ensure Cloudinary is properly configured
+
+// Upload image to Cloudinary
+const uploadToCloudinary = async (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { resource_type: "image" },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result.secure_url); // ✅ Make sure to return the URL
+        }
+      }
+    );
+    uploadStream.end(fileBuffer);
+  });
+};
+
+
+// CREATE A PRODUCT
+const createProduct = async (req, res) => {
+  try {
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
+
+    const { category, description, name, price, quantity } = req.body;
+    if (!category || !description || !name || !price || !quantity || !req.file) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Upload image to Cloudinary
+    const cloudinaryUrl = await uploadToCloudinary(req.file.buffer);
+    if (!cloudinaryUrl) {
+      return res.status(500).json({ message: "Image upload failed" });
+    }
+
+    // Save product to database
+    const product = await Product.create({
+      category,
+      description,
+      image: cloudinaryUrl, // Store Cloudinary URL in DB
+      name,
+      price,
+      quantity,
+    });
+
+    res.status(201).json({ message: "Product created successfully", product });
+  } catch (error) {
+    console.error("Error creating product:", error);
+    res.status(500).json({ message: "An error occurred while creating the product" });
+  }
+};
+
+
+
+
+// // CRETAE A PRODUCT
+
+
+// const createProduct = async (req, res) => {
+//   const { category, description, image, name, price, quantity } = req.body;
+
+//   if (!category || !description || !image || !name || !price || !quantity) {
+//     return res.status(400).json({ message: "All fields are required" });
+//   }
+
+
+//   try {
+//     const product = await Product.create({
+//       category,
+//       description,
+//       image,
+//       name,
+//       price,
+//       quantity,
+//       // user: userId
+//     });
+
+//     res.status(201).json({
+//       message: "Product created successfully",
+//       product,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "An error occurred while creating the product" });
+//   }
+// };
+
+
 
 
 
@@ -10,41 +103,6 @@ const allProducts = async (req, res) => {
   res.json({
     data: products,
   });
-};
-
-
-
-// CRETAE A PRODUCT
-
-
-
-const createProduct = async (req, res) => {
-  const { category, description, image, name, price, quantity } = req.body;
-
-  if (!category || !description || !image || !name || !price || !quantity) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
-
-  try {
-    const product = await Product.create({
-      category,
-      description,
-      image,
-      name,
-      price,
-      quantity,
-      // user: userId
-    });
-
-    res.status(201).json({
-      message: "Product created successfully",
-      product,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while creating the product" });
-  }
 };
 
 

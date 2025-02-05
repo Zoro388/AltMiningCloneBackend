@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+
 const app = express();
 const port = 4000;
 
@@ -24,7 +25,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRouter); // Auth Routes
 app.use("/api/products", productRouter ); // Product Routes
-app.use("/api/order", orderRouter ); // Product Routes
+app.use("/api/order", orderRouter ); // order Routes
 
 // Error Handling
 app.use(errorHandler);
