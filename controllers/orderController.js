@@ -4,9 +4,9 @@ const Order = require('../models/order'); // Import the Order model
 const { Product } = require("../models/product");
 
 const createOrder = async (req, res) => {
-  const { userEmail, userPhoneNumber, ownerAddress, products, message } = req.body;
+  const { userEmail, userPhoneNumber, ownerAddress, products, message, ref, userName } = req.body;
 
-  if (!userEmail || !userPhoneNumber || !ownerAddress || !products || !message) {
+  if (!userEmail || !userName || !userPhoneNumber || !ownerAddress || !products || !message || !ref) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -30,6 +30,7 @@ const createOrder = async (req, res) => {
           price: foundProduct.price,
           quantity: product.quantity,
           image: foundProduct.image, // Include the product image URL
+
         };
       })
     );
@@ -39,11 +40,13 @@ const createOrder = async (req, res) => {
     // Save the order in the database
     const order = await Order.create({
       userEmail,
+      userName,
       userPhoneNumber,
       ownerAddress,
       products: productDetails,
       message,
       totalAmount,
+      ref,
     });
 
     res.status(201).json({ message: "Order created successfully", order });

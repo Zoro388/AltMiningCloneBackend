@@ -20,17 +20,22 @@ const productSchemaO = new mongoose.Schema({
   },
   image: {
     type: String, // URL or file path
-    required: false,
+    required: true,
   },
 });
 
 // Define the Order schema
 const orderSchema = new mongoose.Schema(
+  
   {
     userEmail: {
       type: String,
       required: [true, "Please provide an Email"],
       match: [/\S+@\S+\.\S+/, "Please provide a valid email"], // Email validation
+    },
+    userName: {
+      type: String,
+      required: [true, "Please provide a Username"],
     },
     userPhoneNumber: {
       type: String,
@@ -50,6 +55,10 @@ const orderSchema = new mongoose.Schema(
     },
     totalAmount: {
       type: Number,
+      required: true,
+    },
+    ref: {
+      type: String,
       required: true,
     },
   },
