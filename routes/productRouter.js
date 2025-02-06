@@ -19,7 +19,7 @@ const router = express.Router();
 router
   .route("/")
   .get(allProducts)
-  .post(auth, upload.single("image"), createProduct) // Allows POST method for creating product with image upload
+  .post(upload.single("image"), createProduct) // Allows POST method for creating product with image upload
   .all(methodNotAllowed); // Reject other HTTP methods
 
 

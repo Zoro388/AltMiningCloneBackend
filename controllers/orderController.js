@@ -19,7 +19,7 @@ const createOrder = async (req, res) => {
   for (let product of products) {
     if (!product.Name || !product.Category || !product.price || !product.quantity) {
       return res.status(400).json({
-        message: "Each product must have productName, productCategory, price, and quantity",
+        message: "Each product must have Name, Category, price, and quantity",
       });
     }
   }
@@ -40,6 +40,8 @@ const createOrder = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while creating the order" });
+    console.log(res.status);
+    
   }
 };
 
