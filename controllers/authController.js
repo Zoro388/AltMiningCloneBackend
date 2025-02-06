@@ -93,37 +93,37 @@ const signInUser = async (req, res) => {
 
 
 // Create Product
-const createProduct = async (req, res) => {
-  const { category, description, image, name, price, quantity } = req.body;
+// const createProduct = async (req, res) => {
+//   const { category, description, image, name, price, quantity } = req.body;
 
-  if (!category || !description || !image || !name || !price || !quantity) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+//   if (!category || !description || !image || !name || !price || !quantity) {
+//     return res.status(400).json({ message: "All fields are required" });
+//   }
 
-  try {
-    const product = await Product.create({
-      category,
-      description,
-      image,
-      name,
-      price,
-      quantity,
-    });
+//   try {
+//     const product = await Product.create({
+//       category,
+//       description,
+//       image,
+//       name,
+//       price,
+//       quantity,
+//     });
 
-    res.status(201).json({
-      message: "Product created successfully",
-      product,
-    });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while creating the product" });
-  }
-};
+//     res.status(201).json({
+//       message: "Product created successfully",
+//       product,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(500)
+//       .json({ message: "An error occurred while creating the product" });
+//   }
+// };
 
 module.exports = {
   registerUser,
   signInUser,
-  createProduct,
+  // createProduct,
 };

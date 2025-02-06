@@ -2,12 +2,12 @@ const express = require("express");
 const {
   registerUser,
   signInUser,
-  getUserById,
-  createProduct,
+  // createProduct,
 
 } = require("../controllers/authController"); // Import controller functions
 const methodNotAllowed = require("../utilis/methodNotAllowed"); // Handle unsupported HTTP methods
-const auth = require("../middlewares/auth"); // Authentication middleware
+const { createProduct } = require("../controllers/productController");
+// const auth = require("../middlewares/auth"); // Authentication middleware
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router
   // Route to create a product
 router
 .route("/create")
-.post(auth, createProduct) // Allows POST method for creating appointment
+.post(createProduct) // Allows POST method for creating appointment
 .all(methodNotAllowed); // Reject other HTTP methods
 
 module.exports = router; // Export router to be used in app.js or server.js
