@@ -38,6 +38,7 @@ const createProduct = async (req, res) => {
     // Upload image to Cloudinary
     const cloudinaryUrl = await uploadToCloudinary(req.file.buffer);
     if (!cloudinaryUrl) {
+      console.log("Cloudinary URL:", cloudinaryUrl);
       return res.status(500).json({ message: "Image upload failed" });
     }
 
