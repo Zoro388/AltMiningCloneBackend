@@ -1,47 +1,55 @@
 const Order = require('../models/order'); // Import the Order model
 
-// CREATE AN ORDER
+// const { Order } = require("../models/order");
+const { Product } = require("../models/product");
 
 const createOrder = async (req, res) => {
   const { userEmail, userPhoneNumber, ownerAddress, products, message } = req.body;
 
-  // Validate required fields
   if (!userEmail || !userPhoneNumber || !ownerAddress || !products || !message) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  // Ensure products is an array and not empty
   if (!Array.isArray(products) || products.length === 0) {
     return res.status(400).json({ message: "Products array cannot be empty" });
   }
 
-  // Validate each product object
-  for (let product of products) {
-    if (!product.Name || !product.Category || !product.price || !product.quantity) {
-      return res.status(400).json({
-        message: "Each product must have Name, Category, price, and quantity",
-      });
-    }
-  }
-
   try {
-    const totalAmount = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+    // Fetch product details including images from the database
+    const productDetails = await Promise.all(
+      products.map(async (product) => {
+        const foundProduct = await Product.findById(product.id); // Ensure product.id is sent from frontend
 
+        if (!foundProduct) {
+          throw new Error(`Product with ID ${product.id} not found`);
+        }
+
+        return {
+          Name: foundProduct.name,
+          Category: foundProduct.category,
+          price: foundProduct.price,
+          quantity: product.quantity,
+          image: foundProduct.image, // Include the product image URL
+        };
+      })
+    );
+
+    const totalAmount = productDetails.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+
+    // Save the order in the database
     const order = await Order.create({
       userEmail,
       userPhoneNumber,
       ownerAddress,
-      products,
+      products: productDetails,
       message,
       totalAmount,
     });
 
     res.status(201).json({ message: "Order created successfully", order });
   } catch (error) {
-    console.error(error);
+    console.error("Error creating order:", error);
     res.status(500).json({ message: "An error occurred while creating the order" });
-    console.log(res.status);
-    
   }
 };
 
